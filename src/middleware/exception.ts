@@ -17,7 +17,11 @@ const exception = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
       switch (statusCode) {
         case 404: 
           if(ctx.originalUrl.startsWith(config.publicRoute + '/images')) {
-            ctx.redirect(config.publicRoute + '/images/empty.png');
+            /**
+             * 图片资源不存在时重定向
+             * 请不要删除项目内的 404.jpg
+             */
+            ctx.redirect(config.publicRoute + '/images/404.jpg');
             return
           }
         default: 
