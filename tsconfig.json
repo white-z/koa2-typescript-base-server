@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS", // 只能是CommonJS，请勿更改！
+    "strict": true,
+    "importHelpers": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": true,
+    "sourceMap": false,
+    "removeComments": true,
+    "typeRoots" : ["./node_modules/@types", "./src/typings"],
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom"
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "*.ts",
+    "*/.d.ts",
+    "pm2.json",
+    "package.json"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}

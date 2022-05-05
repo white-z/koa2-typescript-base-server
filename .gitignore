@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+static/sys.log
+.vscode
+yarn.lock
+dist
+output
+yarn-error.log
+/static/*.log
