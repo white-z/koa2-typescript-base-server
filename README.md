@@ -33,12 +33,20 @@
   password: 'admin123'
 }
 ```
+登录成功后，接口会返回token, 保存token至cookie用于验证
+具体验证逻辑查看：
+```
+src\middleware\validToken.ts
+src\middleware\props.ts 
+```
 
 - 安装依赖并启动 3031端口
 ```bash
 > npm install
 > npm run dev
 ```
+启动后可尝试请求 http://localhost:3031/api/os/get_version
+
 - 项目打包
 ```bash
 > npm run build:tsc
