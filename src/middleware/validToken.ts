@@ -3,9 +3,7 @@ import Result from '../core/result';
 // 无访问限制的接口
 const pass = [
   '/api/account/register',
-  '/api/account/login',
-  '/api/account/get_sitekey',
-  '/api/perform/set_elapsed_time'
+  '/api/account/login'
 ]
 
 /**

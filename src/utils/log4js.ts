@@ -10,7 +10,7 @@ const log = getLogger() as Logger
 
 // 详细配置查看 https://log4js2.github.io/log4js2-core/
 configure({
-  appenders: { sys: { type: 'file', filename: config.static + '/sys.log' } },
+  appenders: { sys: { type: IS_PROD ? 'file': 'console', filename: config.static + '/sys.log' } },
   categories: { default: { appenders: ['sys'], level: IS_PROD ? 'warn' : 'all' } }
 });
 
