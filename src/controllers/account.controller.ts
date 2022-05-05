@@ -26,7 +26,7 @@ const validateLogin = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
         account: 'admin',
         nickname: 'admin',
         phone: '12345678901',
-        currentAuthority: 'USER'
+        currentAuthority: 'SUPER_ADMIN'
       })
       const password = 'admin123'
       const hash = await passport.encrypt(password);

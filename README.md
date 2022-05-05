@@ -1,6 +1,10 @@
 # koa2-typescript-base-server
 使用typescript开发的koa2 mongoose 基础模板 包含登录注册 日志记录 分页查询
 
+# 使用提醒 2022-05-05
+  因为本项目为基础模板，功能较少，我会不定期更新package.json中的依赖项至最新版本，
+  克隆此项目后，您可手动将package.json文件内的依赖项迁移至最新稳定版本，方便后续使用。
+
 # 基础功能
 - account.controller
   登录/登出
@@ -43,8 +47,3 @@
 ```bash
 > npm run build
 ```
-
-# 使用提醒 2022-05-05
-  因为本项目为基础模板，功能较少，我会不定期更新package.json中的依赖项至最新版本，
-  克隆此项目后，您可手动将package.json文件内的依赖项迁移至最新稳定版本，方便后续使用。
-  
