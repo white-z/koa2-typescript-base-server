@@ -22,6 +22,13 @@
   mongoDB
   redis
   typescript
+- 初始账号密码
+```
+{
+  account: 'admin', 
+  password: 'admin123'
+}
+```
 
 - 安装依赖并启动 3031端口
 ```bash
