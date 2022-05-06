@@ -7,16 +7,15 @@
 
 # 基础功能
 - account.controller
-  登录/登出
-  注册
-  修改密码
-  查询/修改用户信息
+  登录/登出;
+  注册;
+  修改密码;
+  查询/修改用户信息;
   用户列表
 - file.controller
   上传文件
 - log.controller
-  分页查询/删除数据库操作日志
-  查询/删除系统文本日志
+  分页查询/删除数据库操作日志; 查询/删除系统文本日志
 - os.controller
   查询CPU/内存/磁盘信息
 
@@ -26,26 +25,26 @@
   mongoDB
   redis
   typescript
-- 初始账号密码
-```
-{
-  account: 'admin', 
-  password: 'admin123'
-}
-```
-登录成功后，接口会返回token, 保存token至cookie用于验证
-具体验证逻辑查看：
-```
-src\middleware\validToken.ts
-src\middleware\props.ts 
-```
 
 - 安装依赖并启动 3031端口
 ```bash
 > npm install
 > npm run dev
 ```
-启动后可尝试请求 http://localhost:3031/api/os/get_version
+启动后可尝试请求 POST: http://localhost:3031/api/account/login
+- 接口入参为初始账号密码
+```
+{
+  account: 'admin', 
+  password: 'admin123'
+}
+```
+登录成功后，接口会返回token, 保存token至cookie用于验证; 
+具体验证逻辑查看：
+```
+src\middleware\validToken.ts
+src\middleware\props.ts 
+```
 
 - 项目打包
 ```bash
