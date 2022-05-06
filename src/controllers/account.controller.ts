@@ -19,8 +19,9 @@ import { Userinfo } from '../middleware/types';
 const validateLogin = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
 
   if(process.env.NODE_ENV === 'development') {
+    // 初始化账号 ------------------------------------------***
     const accounts =  await Account_col.countDocuments()
-    // 初始化账号
+    
     if(accounts === 0) {
       const account = await Account_col.create({
         account: 'admin',
@@ -35,13 +36,14 @@ const validateLogin = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
         hash
       })
     }
+    // 首次登录成功后可删除以上代码 --------------------------***
     return next()
   }
 
   const req: LoginParams = ctx.request.body;
 
   // 必要入参验证
-  if(!req.account || !req.password || req.account.length > 30 || req.account.length > 30) {
+  if(!req.account || !req.password || req.account.length > 30 || req.password.length > 30) {
     ctx.body = Result.error({msg: 'Invalid username/password'});
     return;
   }
@@ -246,12 +248,26 @@ const logout = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
 
 const list = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
   const req = ctx.request.query
+  const params = {
+    page: Number(req.page) || 0,
+    size: Number(req.size) || 20
+  }
   const filter = {}
   if(req.id) {
     Reflect.set(filter, '_id', req.id)
   }
-  const res: Userinfo[] = await Account_col.find(filter).lean();
-  ctx.body = Result.success<Userinfo[]>({data: res});
+  const [total, res] = await Promise.all([
+    Account_col.countDocuments(filter),
+    Account_col.find(filter)
+    .skip(params.page * params.size)
+    .limit(params.size).lean()
+  ])
+  ctx.body = Result.pagination({
+    total,
+    currentPage: params.page,
+    pageSize: params.size,
+    records: res 
+  });
 }
 
 const update = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
