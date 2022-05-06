@@ -28,8 +28,8 @@
 
 - 安装依赖并启动 3031端口
 ```bash
-> npm install
-> npm run dev
+> npm install 或 yarn install
+> npm run dev 或 yarn dev
 ```
 启动后可尝试请求 POST: http://localhost:3031/api/account/login
 - 接口入参为初始账号密码
@@ -48,9 +48,9 @@ src\middleware\props.ts
 
 - 项目打包
 ```bash
-> npm run build:tsc
+> npm run build:tsc 或 yarn build:tsc
 ```
 - 项目打包并混淆加密
 ```bash
-> npm run build
+> npm run build 或 yarn build
 ```
