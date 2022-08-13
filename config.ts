@@ -14,5 +14,5 @@
     * @！！！克隆项目后，请修改此值！！！
     * @！！！不要在开放的存储库保存此字段！！！
     */
-  secret: 'SECRET_(,WD%~kT_gy3+6k_8V,$US8yzjL'
+  secret: 'SECRET_(,WD%~kT_gy3+6k_8V,$US8yzjLS'
 } as Global.SystemConfig
