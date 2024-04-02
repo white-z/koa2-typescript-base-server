@@ -1,7 +1,8 @@
 {
-  "name": "koa2TypescriptBaseServer",
+  "name": "koa2-typescript-base-server",
   "version": "1.0.1",
-  "description": "",
+  "description": "koa2 web server base on typescript",
+  "keywords": ["koa2", "typescript", "redis", "mongoose"],
   "main": "app.js",
   "ts-node": "ts-node",
   "engines": {
@@ -26,8 +27,7 @@
     "mongoose": "^8.2.4",
     "redis": "^4.6.13",
     "statuses": "^2.0.1",
-    "ua-parser-js": "^1.0.37",
-    "uuid": "^9.0.1"
+    "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
     "@types/koa": "^2.13.12",
