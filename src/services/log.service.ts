@@ -33,13 +33,8 @@ export async function getLogById(_id: string) {
 /** 获取日志列表（分页） */
 export async function getLogList(params: PaginationQuery): Promise<{ total: number; records: LogDocument[] }> {
   const pipeline = getPipeline(params)
-
-  try {
-    const results = await LogModel.aggregate(pipeline);
-    const total = results[0]?.metadata[0]?.total;
-    const records = results[0]?.records;
-    return { total, records }
-  } catch (error) {
-    throw error
-  }
+  const results = await LogModel.aggregate(pipeline);
+  const total = results[0]?.metadata[0]?.total;
+  const records = results[0]?.records;
+  return { total, records }
 }

@@ -2,7 +2,7 @@ import { createClient } from 'redis'
 
 // 定义控制器命名空间
 export enum ControllerNamespace {
-  CHAT = 'test'
+  TEST = 'test'
 }
 
  class RedisManager {

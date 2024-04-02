@@ -6,7 +6,7 @@ export enum TestPrivateNamespace {
 
 class RedisTest extends RedisManager {
 
-  static readonly namespace = ControllerNamespace.CHAT
+  static readonly namespace = ControllerNamespace.TEST
   
   static readonly #key = {
     testValue: 'testValue'
