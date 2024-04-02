@@ -28,14 +28,14 @@
 ```
 
 启动后可尝试请求 
-POST: http://localhost:3031/api/test/get_version
+GET: `http://localhost:3031/api/test/get_version`
 会返回json
 ```json
 {"code":200,"msg":"OK","data":{"version":"1.0.1","env":"development"}}
 
 ```
 - redis设置值：
-GET: /api/test/set_value?value=abc
+GET: `/api/test/set_value?value=abc`
 ```json
 {"code":200,"msg":"OK","data":null}
 ```
@@ -45,11 +45,11 @@ GET: /api/test/get_value
 {"code":200,"msg":"OK","data":"abc"}
 ```
 - redis清除全部缓存：
-POST: /api/test/flushdb
+POST: `/api/test/flushdb`
 清除操作会被记录在数据库日志中。
 
 - 分页查询日志列表：
-GET: /api/log/get_dblog
+GET: `/api/log/get_dblog`
 
 - 分页响应和分页查询的逻辑查看
 `src\core\result.ts`和`src\services\log.service.ts`
