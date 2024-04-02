@@ -1,80 +1,47 @@
-import Log_col from '../models/log';
+import fsPromises from 'fs/promises'
 import Result from '../core/result';
-import fs from 'fs/promises'
-import config from '../../config';
 import log from '../utils/log4js';
+import { getLogList, clearLog } from '../services/log.service';
+import { Order } from '../core/types/enum';
 
-const getDBLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
+export const getDBLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
   const req = ctx.request.query
   const params = {
-    page: 0,
-    size: 20,
-    order: 'asc',
+    page: 1,
+    pageSize: 20,
+    order: Order.DESC,
     orderBy: 'createdAt',
-    startTime: '',
-    endTime: '',
-    logId: null
+    startTime: null,
+    endTime: null,
+    ...req
   }
-  Object.keys(params).forEach(key => {
-    if(Object.prototype.hasOwnProperty.call(req, key)) {
-      if(key === 'page' || key === 'size') {
-        params[key] = parseInt(req[key] as string)
-      } else {
-        Reflect.set(params, key, req[key])
-      }
-    }
-  })
-  const filter = {}
-
-  if(params.startTime) {
-    Reflect.set(filter, 'createdAt.$gte', params.startTime)
-  }
-
-  if(params.endTime) {
-    Reflect.set(filter, 'createdAt.$lte', params.endTime)
-  }
-
-  if(params.logId) {
-    Reflect.set(filter, '_id', params.logId)
-  }
-
-  const [total, records] = await Promise.all([
-    Log_col.countDocuments(filter),
-    Log_col.find(filter)
-    .sort({[params.orderBy]: params.order === 'asc' ? 1 : -1})
-    .skip(params.page * params.size)
-    .limit(params.size).lean()
-  ])
-
+  const {total, records} = await getLogList(params)
   ctx.body = Result.pagination({
-    currentPage: params.page,
-    total: total,
-    records: records,
-    pageSize: params.size
+    records,
+    total,
+    page: params.page,
+    pageSize: params.pageSize
   })
 }
 
-const clearDBLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
-  const res = await Log_col.deleteMany()
+export const clearDBLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
+  const res = await clearLog()
   ctx.body = Result.success({data: res})
-  log.db(ctx, '清除数据库日志')
+  log.db(ctx, 'Clear Database Logs')
 }
 
-const getSysLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
-  ctx.body = process.env.NODE_ENV === 'development' ? Result.success({
-    msg: '开发环境未记录系统日志'
-  }) : await fs.readFile(config.static + '/sys.log', 'utf8')
+export const getSysLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
+  if(process.env.NODE_ENV === 'development') {
+    ctx.body = Result.success({
+    msg: 'No system logs recorded in the development environment.'
+    }) 
+  } else {
+    ctx.body = await fsPromises.readFile(process.env.STATIC_PATH + '/sys.log', 'utf8')
+  }
 }
 
-const clearSysLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
-  await fs.writeFile(config.static + '/sys.log', '')
-  ctx.body = Result.success({msg: '清除成功'})
-  log.db(ctx, '清除系统日志')
-}
-
-export default {
-  getDBLog,
-  clearDBLog,
-  getSysLog,
-  clearSysLog
+export const clearSysLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
+  await fsPromises.writeFile(process.env.STATIC_PATH + '/sys.log', '')
+  ctx.body = Result.success({msg: 'Clear Successfully'})
+  log.db(ctx, 'Clear System logs')
 }

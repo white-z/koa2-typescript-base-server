@@ -1,4 +1,5 @@
 import { Logger as Log4js } from 'log4js'
+import { Types } from 'mongoose'
 
 /**
    * 自定义日志类型
@@ -7,12 +8,12 @@ import { Logger as Log4js } from 'log4js'
   /**
    * 记录数据库操作日志
    */
-  db: (ctx: KoaContext, info: string) => Promise<void>
+  db: (ctx: KoaContext, info: string) => Promise<LogDatabaseContent>
 }
 /**
  * 客户端操作日志数据库字段
  */
-export interface LogContent {
+export interface LogDatabaseContent {
   /**
    * 请求方法
    */
@@ -54,10 +55,6 @@ export interface LogContent {
    */
   responese?: any
   /**
-   * 执行本次请求的用户账号id
-   */
-  accountId?: string | null,
-  /**
    * 客户端的user-agent
    */
   userAgent?: string
@@ -66,7 +63,11 @@ export interface LogContent {
    */
   query?: string
   /**
-   * 请求体中的参数
+   * 请求体中的参数key
    */
-  body?: any
+  body?: any[]
+  /**
+   * ObjectId
+   */
+  _id?: Types.ObjectId
 }

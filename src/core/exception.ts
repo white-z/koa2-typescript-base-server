@@ -1,4 +1,4 @@
-import { ResponseResult } from './types'
+import type { ResponseResult } from './types'
 
 /**
  * 自定义异常处理

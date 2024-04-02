@@ -1,21 +1,20 @@
-import account from './api/account.router'
-import file from './api/file.router'
 import log from './api/log.router'
-import os from './api/os.router'
+import test from './api/test.router'
+import type Koa from 'koa'
+import type Router from '@koa/router'
+
+interface Route extends Router<Koa.DefaultState, Koa.DefaultContext> {}
 
 /**
  * register router
  * @param app Koa
  */
-export default async function (app: Global.Koa) {
-  const routes = {
-    account,
-    file,
+export default async function (app: Koa<Koa.DefaultState, Koa.DefaultContext>) {
+  const routes: Route[] = [
     log,
-    os
-  }
-  Object.keys(routes).forEach(key => {
-    const route = Reflect.get(routes, key)
+    test,
+  ]
+  routes.forEach(route => {
     app.use(route.routes()).use(route.allowedMethods())
   })
 }

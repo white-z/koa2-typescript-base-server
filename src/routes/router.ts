@@ -1,5 +1,4 @@
 import Router from '@koa/router'
-import config from '../../config'
-const router = new Router({prefix: config.apiPrefix});
+const router = new Router({prefix: '/api'});
 
 export default router

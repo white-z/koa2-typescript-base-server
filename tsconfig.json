@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS", // 只能是CommonJS，请勿更改！
+    "module": "NodeNext", // 只能是CommonJS，请勿更改
     "strict": true,
     "importHelpers": true,
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -30,7 +30,6 @@
     "src/**/*",
     "*.ts",
     "*/.d.ts",
-    "pm2.json",
     "package.json"
   ],
   "exclude": [

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import { LogDocument } from './types';
 const Schema = mongoose.Schema;
 const LogSchema = new Schema({
   /**
@@ -50,12 +50,6 @@ const LogSchema = new Schema({
     type: String
   },
   /**
-   * @description model.account._id
-   */
-  accountId: {
-    type: String
-  },
-  /**
    * @description about log infomation
    */
   info: {
@@ -87,4 +81,6 @@ const LogSchema = new Schema({
   }
 }, { collection: 'log', versionKey: false, timestamps: { updatedAt: false}});
 
-export default mongoose.model('log', LogSchema);
+const LogModel = mongoose.model<LogDocument>('log', LogSchema);
+
+export default LogModel

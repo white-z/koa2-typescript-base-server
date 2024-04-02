@@ -1,9 +1,16 @@
 import axios from 'axios'
 import Exception from '../core/exception';
-import { RequestHandle } from './types'
+import type { RequestHandle } from './types'
+import Result from '../core/result';
+
 const service = axios.create({
-  timeout: 60000 // 超时时间
+  timeout: 60 * 1000 * 60,
+  headers: {
+    'Content-Type': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36'
+  },
 });
+
 service.interceptors.request.use(
   (request) => {
     const token = null
@@ -22,7 +29,7 @@ service.interceptors.response.use(
     return response
   },
   (err) => {
-    return Promise.reject(err);
+    return err.response || Promise.reject(err);
   }
 );
 
@@ -51,7 +58,7 @@ const request: RequestHandle = async (method, api, params = {}, config = {}) => 
     })
     return res.data
   } catch (error: any) {
-    throw new Exception({code: 50006, msg: `${error?.config?.url} ${error?.message}`})
+    throw new Exception({code: Result.ResponseCode.SERVER_ERROR, msg: `${error?.config?.url} ${error?.message}`})
   }
   
 };

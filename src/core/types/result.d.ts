@@ -1,3 +1,4 @@
+import { Order } from './enum'
 /**
  * 服务响应结果
  */
@@ -32,7 +33,7 @@ export interface ErrorCode {
 /**
  *  前端分页查询基础入参
  */
- export interface PaginationQuery {
+ export interface PaginationQuery<T = string> {
   /**
    * 当前页码
    */
@@ -40,18 +41,20 @@ export interface ErrorCode {
   /**
    * 每页数量
    */
-  size: number
+  pageSize: number
   /**
    * 排序字段
    */
-  orderBy?: string | string[]
+  orderBy?: T
   /**
    * 排序方式
    * asc: 升序
    * desc: 降序
   **/
-  order?: 'asc' | 'desc'
-  [key: string]: any
+  order?: Order
+  
+  startTime?: string | null
+  endTime?: string | null
 }
 
 /**
@@ -61,7 +64,7 @@ export interface PaginationData<D = never> {
   /**
    * 当前页码
    */
-  currentPage: number
+  page: number
   /**
    * 每页数量
    */
@@ -77,5 +80,5 @@ export interface PaginationData<D = never> {
   /**
    * 总计页数
    */
-   totalPage?: number
+  totalPage?: number
 }

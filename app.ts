@@ -1,4 +1,5 @@
-const SERVER_START_TIME = Date.now()
+// see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import * as dotenv from 'dotenv'
 
 import Koa from 'koa'
 
@@ -11,25 +12,18 @@ import koaBody from 'koa-body'
 // https://www.npmjs.com/package/koa-static
 import koaStatic from 'koa-static'
 
-// https://www.npmjs.com/package/koa-compress
-import compress from 'koa-compress'
-
 // https://github.com/Automattic/mongoose
 import mongoose from 'mongoose'
 
 // https://www.npmjs.com/package/koa-helmet
 import helmet from 'koa-helmet'
 
-// http server
-import {createServer} from 'http'
-
-// global config
-import config from './config'
-
-// 自定义中间件
+// 错误捕获
 import exception from './src/middleware/exception'
+// 上下文自定义属性
 import props from './src/middleware/props'
-import validToken from './src/middleware/validToken'
+// token验证
+import validate from './src/middleware/validate'
 
 // routes
 import routesRegister from './src/routes'
@@ -37,25 +31,33 @@ import routesRegister from './src/routes'
 // utils
 import log from './src/utils/log4js'
 
-// import SocketServer from './src/socket'
-
 // redis
-import { client } from './src/core/redis'
+import RedisManager from './src/core/redis'
+
+// http server
+import { createServer } from 'http'
+
+import { getReadableTime } from './src/utils/formatDate'
+
+dotenv.config()
+
+const NODE_ENV = process.env.NODE_ENV
+
+if(!NODE_ENV) {
+  log.error('process.env.NODE_ENV is not set, please set it to production or development')
+}
 
 /**
  * -----------------------------------------------------------------------------
  */
 
-const NODE_ENV = process.env.NODE_ENV
- !NODE_ENV && log.error('process.env.NODE_ENV is not set, please set it to production or development')
-
- // redis connection
-client.connect().then(() => {
-  log.info('Redis Client Connected')
-})
+// redis connection
+RedisManager.client
+.on('error', (err: any) => console.log('Redis Client Error', err))
+.on('connect', () => log.info('Redis Client Connected'))
+.connect()
 
 const app = new Koa()
-app.proxy = true
 
 // 捕获全局异常的中间件 (需要放在所有全局中间件之前)
 app.use(exception)
@@ -66,52 +68,57 @@ app.use(helmet({
   contentSecurityPolicy: false
 }))
 
+// 响应跨域请求
 app.use(cors({
-  /**
-   * 响应跨域请求
-   */
-  origin: '*'
+  origin( ctx )  {
+    return '*'
+  },
+  allowMethods: ['GET', 'POST', 'OPTIONS']
 }))
-// 响应gzip
-app.use(compress({ threshold: 2048 }))
 
 // 自定义context上下文属性
 app.use(props)
+
 // 验证token
-app.use(validToken)
+app.use(validate)
+
 // 解析请求体
 app.use(koaBody({
   multipart: true,
   formidable: {
-    maxFileSize: 1024 * 1024 * 5  // 设置上传文件大小最大限制，默认5MB
+    maxFileSize: 1024 * 1024 * 50  // 设置上传文件大小最大限制，默认50Mb
   }
 }))
-// 注册静态资源路由
-app.use(koaStatic(config.static, {
+
+/** 注册静态资源路由
+ * @example [http://localhost:3031/public/images/test.jpg]
+ */
+app.use(koaStatic(process.env.STATIC_PATH, {
   maxage: 1000 * 60 * 60 * 24 * 30
 }))
 
 // API路由注册 (需要放在所有全局中间件之后)
 routesRegister(app)
-
 // 连接数据库
-mongoose.connect(config.db, { 
-  autoIndex: NODE_ENV !== 'production'
-}).then(() => {
+mongoose.set('strictQuery', true);
+mongoose.connect(process.env.DB_URI, { 
+  autoIndex: NODE_ENV !== 'production',
+}).then(async () => {
 
   log.info('Connecting database successfully')
-
   // 启动服务端口
   const httpServer = createServer(app.callback())
-  httpServer.listen(config.port)
+  httpServer.listen(process.env.PORT, () => {
+    log.info((NODE_ENV ? NODE_ENV + ' ' : '') + 'HTTP server started at port: ' + process.env.PORT)
+  })
+  if(typeof performance !== 'undefined') {
+    log.warn(`Server Compiled successfully in ${getReadableTime(performance.now())}`)
+  }
 
-  log.info((NODE_ENV || '') + 'Server Create at port: ' + config.port)
-  log.warn(`Server Compiled successfully in ${Date.now() - SERVER_START_TIME}ms`)
-
-}).catch(err => {
-
+  // SocketServer.create(httpServer)
+  
+}).catch((err: any) => {
   log.error('Failed to connect to database')
   log.error(err)
-
 })
 

@@ -1,5 +1,5 @@
 import router from '../router'
-import logController from '../../controllers/log.controller';
+import * as logController from '../../controllers/log.controller';
 
 router.get('/log/get_dblog', logController.getDBLog);
 router.post('/log/clear_dblog', logController.clearDBLog);
