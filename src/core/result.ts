@@ -21,12 +21,7 @@ class Result {
   public static readonly ERR_CODE: ErrorCode = {
     200: 'OK',
     50000: 'Server Error',
-    50001: 'Not Logged In',
-    50002: 'Invalid Authorization',
-    50003: 'Session Expiration',
-    50004: 'Invalid Params',
-    50005: 'DataBase Error',
-    50006: 'Proxy Request Failed'
+    50001: 'Invalid Params'
   }
   /**
    * 请求处理成功方法
