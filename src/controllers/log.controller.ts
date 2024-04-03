@@ -11,16 +11,14 @@ export const getDBLog = async (ctx: Global.KoaContext, next: Global.KoaNext) => 
     pageSize: 20,
     order: Order.DESC,
     orderBy: 'createdAt',
-    startTime: null,
-    endTime: null,
     ...req
   }
-  const {total, records} = await getLogList(params)
+  const {total, records, page, pageSize} = await getLogList(params)
   ctx.body = Result.pagination({
     records,
     total,
-    page: params.page,
-    pageSize: params.pageSize
+    page,
+    pageSize
   })
 }
 

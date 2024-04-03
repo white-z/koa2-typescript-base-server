@@ -60,4 +60,9 @@ export interface LogDocument {
    * @description responese
    */
   responese?: { code: number; msg: string }
+
+  /**
+   * @description create time
+   */
+  createdAt?: Date
 }

@@ -1,48 +1,81 @@
-import type { PaginationQuery } from '@/core/types'
-import type { PipelineStage } from 'mongoose'
+import type { PaginationQuery } from '../core/types'
+import type { FilterQuery, PipelineStage } from 'mongoose'
 
 /**
  * 获取分页聚合管道
- * @param params 
+ * @param { PaginationQuery } paginationQuery 
  * @param filter 
- * @returns 
+ * @returns pipeline, page, pageSize
  */
-export const getPipeline = (params: PaginationQuery, filter?: any): PipelineStage[] => {
+export const getPaginationPipeline = <T = any>(paginationQuery: PaginationQuery, filterQuery: FilterQuery<T> = {}): {
+  pipeline: PipelineStage[],
+  page: number,
+  pageSize: number
+} => {
 
-  params.page = Number(params.page) || 1
-  params.pageSize = Number(params.pageSize) || 20
+  const params = { ...paginationQuery}
 
-  const match = {
-    createdAt: {$lte: params.startTime || new Date()},
-    endTime: {$gte: params.endTime},
-    ...filter
+  params.page = Number(params.page)
+  params.pageSize = Number(params.pageSize)
+
+  if(isNaN(params.page) || isNaN(params.pageSize)) {
+    throw new Error('Invalid page or pageSize')
+  }
+
+  const records: PipelineStage.FacetPipelineStage[] = []
+
+  if(params.orderBy) {
+    records.push({
+      $sort: { [params.orderBy]: params.order === 'asc' ? 1 : -1 }
+    })
+  }
+
+  if(params.pageSize === -1) {
+    /** 当params.pageSize为-1时不添加分页条件
+     * 可用于查询全部 */
+  } else {
+    if(params.pageSize === 0 || params.pageSize < -1) {
+      throw new Error('Invalid pageSize')
+    }
+    if(params.page < 1) {
+      throw new Error('Invalid page')
+    }
+    records.push(
+      {
+        $skip: (params.page - 1) * params.pageSize
+      },
+      {
+        $limit: params.pageSize
+      }
+    )
   }
 
   const pipeline = [
     {
-      $match: match
+      $match: filterQuery
     },
     {
       $facet: {
         metadata: [{ $count: "total" }],
-        records: [
-          {
-            $sort: ({ [(params.orderBy as string)]: params.order === 'asc' ? 1 : -1 } as Record<string, 1 | -1>)
-          },
-          {
-            $skip: (params.page - 1) * params.pageSize
-          },
-          {
-            $limit: params.pageSize
-          }
-        ]
+        records
       }
     }
   ]
 
-  if(params.pageSize < 0) {
-    pipeline[1].$facet?.records.splice(0, 3)
+  return {
+    pipeline,
+    page: params.page,
+    pageSize: params.pageSize
   }
+}
 
-  return pipeline
+/**
+ * Circumvent Invalid regular expression
+ * @param str 
+ * @returns string
+ */
+export const replaceInvalidChar = (str: string) => {
+  return str.replace(/([.?*+^$[\]\\(){}|-])/g, (s) => {
+    return '\\' + s
+  })
 }

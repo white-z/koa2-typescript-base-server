@@ -63,13 +63,15 @@ class Result {
     records: []
   }): ResponseResult<PaginationData<D>> {
 
-    data.totalPage = data.pageSize < 0 ? 1 : (Math.ceil(data.total / data.pageSize) || 0)
+    if(data.pageSize === -1) {
+      data.totalPage = 1
+    } else {
+      data.totalPage = Math.ceil(data.total / data.pageSize)
+    }
+
     data.total ?? (data.total = 0)
     return this.success({
-      data: {
-        totalPage: 0,
-        ...data
-      }
+      data
     })
   }
 }

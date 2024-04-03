@@ -31,7 +31,7 @@ export interface ErrorCode {
   [key: number]: string
 }
 /**
- *  前端分页查询基础入参
+ *  分页查询基础入参
  */
  export interface PaginationQuery<T = string> {
   /**
@@ -52,13 +52,10 @@ export interface ErrorCode {
    * desc: 降序
   **/
   order?: Order
-  
-  startTime?: string | null
-  endTime?: string | null
 }
 
 /**
- * 前端分页查询结果
+ * 分页查询结果
  */
 export interface PaginationData<D = never> {
   /**
