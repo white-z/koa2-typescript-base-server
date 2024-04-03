@@ -1,7 +1,7 @@
 import LogModel from '../models/log';
 import type { LogDocument } from '../models/types';
 import type { PaginationQuery } from '../core/types';
-import { getPipeline } from './index';
+import { getPipeline } from './util';
 
 
 /**

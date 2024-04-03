@@ -1,7 +1,8 @@
-import Log_col from '../models/log'
+import { addLog } from '../services/log.service';
 import { configure, getLogger } from 'log4js'
 
-import type { LogDatabaseContent, Logger } from './types'
+import type { Logger } from './types'
+import type { LogDocument } from '../models/types';
 
 const IS_PROD = process.env.NODE_ENV === 'production'
 
@@ -13,9 +14,9 @@ configure({
 });
 
 Object.defineProperty(log, 'db', {
-  value: async (ctx: Global.KoaContext, info: string): Promise<LogDatabaseContent | undefined> => {
+  value: async (ctx: Global.KoaContext, info: string): Promise<LogDocument | undefined> => {
     try {
-      const column: LogDatabaseContent = {
+      const column: LogDocument = {
         ip: ctx.req.headers['x-real-ip'] || ctx.ip,
         userAgent: ctx.headers['user-agent'],
         referer: ctx.referer,
@@ -30,7 +31,7 @@ Object.defineProperty(log, 'db', {
         version: ctx.props.version,
         info
       }
-      const res: any = await Log_col.create(column)
+      const res: any = await addLog(column)
       log.warn(`${ctx.ip} Create log: ${res._id} ${ctx.request.method} ${ctx.request.path} ${ctx.status} ${info}`)
       return res
     } catch (error) {
