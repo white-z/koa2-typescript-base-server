@@ -14,7 +14,7 @@ class Result {
   
   protected constructor() {}
   
-  static ResponseCode = ResponseCode
+  static readonly ResponseCode = ResponseCode
   /**
    * 服务响应状态码列表
    */

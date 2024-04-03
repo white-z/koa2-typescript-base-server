@@ -22,8 +22,9 @@ const validate = async (ctx: Global.KoaContext, next: Global.KoaNext) => {
     }
     return next()
   }
-  
-  return next()
+  if(ctx.path.startsWith('/api')) {
+    return next()
+  }
 }
 
 export default validate;

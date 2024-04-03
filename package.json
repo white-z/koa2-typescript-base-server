@@ -6,7 +6,7 @@
   "main": "app.js",
   "ts-node": "ts-node",
   "engines": {
-    "node": ">=14.18.2"
+    "node": ">=16.20.2"
   },
   "scripts": {
     "dev": "nodemon app.ts",

@@ -45,6 +45,7 @@ const NODE_ENV = process.env.NODE_ENV
 
 if(!NODE_ENV) {
   log.error('process.env.NODE_ENV is not set, please set it to production or development')
+  process.exit(1)
 }
 
 /**

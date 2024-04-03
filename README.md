@@ -16,7 +16,7 @@
 
 # 使用说明
 - 确保本地安装了 
-  node.js >= 14.18.2
+  node.js >= 16.20.2
   mongoDB
   redis
   typescript
@@ -58,4 +58,9 @@ GET: `/api/log/get_dblog`
 - 项目打包
 ```bash
 > npm run build 或 yarn build
+```
+
+- 打包完成后需要创建`.env`文件并将`NODE_ENV`修改为`production`
+```
+NODE_ENV=production
 ```

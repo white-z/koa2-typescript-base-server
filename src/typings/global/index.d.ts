@@ -4,7 +4,7 @@ declare namespace NodeJS {
   export interface ProcessEnv {
     NODE_ENV?: 'development' | 'production'
     DB_URI: string
-    REDIS_URL: string
+    REDIS_URI: string
     PORT: string
     STATIC_PATH: string
   }
